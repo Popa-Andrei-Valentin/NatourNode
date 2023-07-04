@@ -1,0 +1,22 @@
+{
+  "name": "natour",
+  "version": "1.0.0",
+  "description": "Learning Node, Express and MongoDB",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Popa-Andrei-Valentin/NatourNode.git"
+  },
+  "author": "Popa Andrei-Valentin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Popa-Andrei-Valentin/NatourNode/issues"
+  },
+  "homepage": "https://github.com/Popa-Andrei-Valentin/NatourNode#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
