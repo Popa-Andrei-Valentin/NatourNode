@@ -73,6 +73,24 @@ app.post('/api/v1/tours', (req, res) => {
   })
 })
 
+/** Handling PATCH requests */
+app.patch('/api/v1/tours/:id', (req, res) => {
+  if (Number(req.params.id) > tours.length) {
+    return res.status(404).json({
+      status: "error",
+      message: "Tour with this id was not found"
+    })
+  }
+
+  res.status(200).json({
+    status: "succes",
+    data: {
+      tour: "Updated properties here:"
+    }
+  })
+})
+
+
 const port = 3000
 app.listen(port, () => {
   console.log(`Running on port: ${port}`);
