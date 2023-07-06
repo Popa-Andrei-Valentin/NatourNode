@@ -32,6 +32,29 @@ app.get('/api/v1/tours', (req, res) => {
   }
 })
 
+/** Handling GET requests with parameters */
+app.get('/api/v1/tours/:id', (req, res) => {
+  const id = Number(req.params.id);
+
+  if (id > tours.length) {
+    return res.status(404).json({
+      status:"error",
+      message: "No tour was found with this parameter: " + id
+    })
+  }
+
+  const tour = tours.find(el => el.id === Number(req.params.id))
+
+  if (tours.length > 0) {
+    res.status(200).json({
+      status: 'succes',
+      data: {
+        tour
+      }
+    })
+  }
+})
+
 /** Handling POST requests */
 app.post('/api/v1/tours', (req, res) => {
 
