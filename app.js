@@ -87,7 +87,8 @@ app.post('/api/v1/tours', createTour);
 /** Handling PATCH requests */
 app.patch('/api/v1/tours/:id', updateTour);
 
-app.route('/api/v1/tours').get(getAllTours).post(createTour)
+// Example of chaining events.
+app.route('/api/v1/tours').get(getAllTours).post(createTour);
 
 const port = 3000
 app.listen(port, () => {
