@@ -4,18 +4,18 @@ const morgan = require('morgan');
 const app = express();
 
 // 1) MIDDLEWARES
-app.use(morgan('dev'))
+app.use(morgan('dev'));
 app.use(express.json());
 
 app.use((req,res,next) => {
   console.log("Hello from the middleware")
   next()
-})
+});
 
 app.use((req,res,next) => {
   req.requestTime = new Date().toISOString()
   next()
-})
+});
 
 // 2) ROUTE HANDLERS
 const getAllTours = (req, res) => {
@@ -28,7 +28,7 @@ const getAllTours = (req, res) => {
       tours
     }
   })
-}
+};
 
 const getSpecificTour = (req, res) => {
   const id = Number(req.params.id);
@@ -50,7 +50,7 @@ const getSpecificTour = (req, res) => {
       }
     })
   }
-}
+};
 
 const createTour = (req, res) => {
 
@@ -67,7 +67,7 @@ const createTour = (req, res) => {
       }
     })
   })
-}
+};
 
 const updateTour = (req, res) => {
   if (Number(req.params.id) > tours.length) {
@@ -78,10 +78,59 @@ const updateTour = (req, res) => {
   }
 
   res.status(200).json({
-    status: "succes",
+    status: "success",
     data: {
       tour: "Updated properties here:"
     }
+  })
+};
+
+const users = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/users.json`))
+
+const getAllUsers = (req, res) => {
+  res.status(202).json({
+    status: 'success',
+    data: {
+      users
+    }
+  });
+};
+
+const getUser = (req, res) => {
+  const id = Number(req.params.id)
+  if (id > users.length) {
+    res.status(404).json({
+      status:'error',
+      message:`There is no user with the following id: ${id}`
+    });
+  }
+
+  const user = users[id];
+
+  res.status(200).json({
+    status:'success',
+    user
+  })
+};
+
+const createUser = (req, res) => {
+  res.status(500).json({
+    status:'Error',
+    message:'Route still in progress'
+  })
+}
+
+const updateUser = (req, res) => {
+  res.status(500).json({
+    status:'Error',
+    message:'Route still in progress'
+  })
+}
+
+const deleteUser = (req, res) => {
+  res.status(500).json({
+    status:'Error',
+    message:'Route still in progress'
   })
 }
 
@@ -91,20 +140,29 @@ app.get('/api/v1/tours', (req, res) => {
   if (tours.length > 0) {
     getAllTours(req, res)
   }
-})
-
-/** Handling GET requests with parameters */
-app.get('/api/v1/tours/:id', getSpecificTour);
-
-/** Handling POST requests */
-app.post('/api/v1/tours', createTour);
-
-/** Handling PATCH requests */
-app.patch('/api/v1/tours/:id', updateTour);
+});
 
 // 3) ROUTES
-// Example of chaining events.
-app.route('/api/v1/tours').get(getAllTours).post(createTour);
+app
+  .route('/api/v1/tours')
+  .get(getAllTours)
+  .post(createTour);
+
+app
+  .route('/api/v1/tours/:id')
+  .get(getSpecificTour)
+  .patch(updateTour);
+
+app
+  .route('/api/v1/users')
+  .get(getAllUsers)
+  .post(createUser);
+
+app
+  .route('/api/v1/users/:id')
+  .get(getUser)
+  .patch(updateUser)
+  .delete(deleteUser);
 
 // 4) START SERVER
 const port = 3000
