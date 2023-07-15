@@ -2,6 +2,7 @@ const fs = require('fs');
 
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`));
 
+// MIDDLEWARES
 exports.validateId = (req, res, next, val) => {
   console.log("I enter inside param middleware" + val);
   if (val > tours.length) {
@@ -12,6 +13,17 @@ exports.validateId = (req, res, next, val) => {
   }
   next();
 }
+
+exports.checkBody = (req, res, next) => {
+  if (!req.body.price || !req.body.name) {
+    return res.status(400).json({
+      status:"fail",
+      message:"New tour MUST contain name AND price properties ! Try again."
+    })
+  }
+  next()
+}
+//////
 
 exports.getAllTours = (req, res) => {
   console.log(req.requestTime);
