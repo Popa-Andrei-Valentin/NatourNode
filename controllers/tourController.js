@@ -2,6 +2,17 @@ const fs = require('fs');
 
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`));
 
+exports.validateId = (req, res, next, val) => {
+  console.log("I enter inside param middleware" + val);
+  if (val > tours.length) {
+    return res.status(404).json({
+      status: "error",
+      message: "No tour was found with this id: " +val
+    })
+  }
+  next();
+}
+
 exports.getAllTours = (req, res) => {
   console.log(req.requestTime);
 
@@ -15,15 +26,6 @@ exports.getAllTours = (req, res) => {
 };
 
 exports.getSpecificTour = (req, res) => {
-  const id = Number(req.params.id);
-
-  if (id > tours.length) {
-    return res.status(404).json({
-      status: "error",
-      message: "No tour was found with this parameter: " + id
-    })
-  }
-
   const tour = tours.find(el => el.id === Number(req.params.id))
 
   if (tours.length > 0) {
@@ -54,13 +56,6 @@ exports.createTour = (req, res) => {
 };
 
 exports.updateTour = (req, res) => {
-  if (Number(req.params.id) > tours.length) {
-    return res.status(404).json({
-      status: "error",
-      message: "Tour with this id was not found"
-    })
-  }
-
   res.status(200).json({
     status: "success",
     data: {
