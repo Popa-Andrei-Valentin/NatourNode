@@ -8,7 +8,7 @@ mongoose.connect(process.env.DATABASE, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
-})
+});
 
 const tourSchema = mongoose.Schema({
     name: {
@@ -18,15 +18,24 @@ const tourSchema = mongoose.Schema({
     },
     rating: {
       type: Number,
-      default: 6.9
+      required: [true, "A tour must have a rating"]
     },
     price: {
       type: Number,
-      required: [true, "A tour must have a price"]
+      default: 39.99
     },
+});
+
+const Tour = mongoose.model("Tour", tourSchema);
+
+const testTour = new Tour({
+  name: "Grand Canyon Adventure",
+  rating: 7.9
 })
 
-const Tour = mongoose.model("Tour", tourSchema)
+testTour.save().then(doc => {
+  console.log(doc);
+}).catch(err => console.log("Error ❌", err));
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
