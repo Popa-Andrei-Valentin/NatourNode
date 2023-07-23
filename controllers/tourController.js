@@ -1,19 +1,7 @@
-const fs = require('fs');
+const Tour = require("../models/tourModels");
 
-const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`));
 
 // MIDDLEWARES
-exports.validateId = (req, res, next, val) => {
-  console.log("I enter inside param middleware" + val);
-  if (val > tours.length) {
-    return res.status(404).json({
-      status: "error",
-      message: "No tour was found with this id: " +val
-    })
-  }
-  next();
-}
-
 exports.checkBody = (req, res, next) => {
   if (!req.body.price || !req.body.name) {
     return res.status(400).json({
@@ -30,10 +18,10 @@ exports.getAllTours = (req, res) => {
 
   res.status(200).json({
     status: 'succes',
-    results: tours.length,
-    data: {
-      tours
-    }
+    // results: tours.length,
+    // data: {
+    //   tours
+    // }
   })
 };
 
