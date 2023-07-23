@@ -1,18 +1,5 @@
 const Tour = require("../models/tourModels");
 
-
-// MIDDLEWARES
-exports.checkBody = (req, res, next) => {
-  if (!req.body.price || !req.body.name) {
-    return res.status(400).json({
-      status:"fail",
-      message:"New tour MUST contain name AND price properties ! Try again."
-    })
-  }
-  next()
-}
-//////
-
 exports.getAllTours = (req, res) => {
   console.log(req.requestTime);
 
@@ -38,21 +25,22 @@ exports.getSpecificTour = (req, res) => {
   }
 };
 
-exports.createTour = (req, res) => {
+exports.createTour = async (req, res) => {
+  try {
+    const newTour = await Tour.create(req.body)
 
-  const newId = tours[tours.length - 1].id + 1
-  const newTour = Object.assign({id: newId}, req.body)
-
-  tours.push(newTour);
-
-  fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours), err => {
     res.status(201).json({
       status: 'succes',
       data: {
         tour: newTour
       }
     })
-  })
+  } catch (err) {
+    res.status(400).json({
+      status: "fail",
+      message: err
+    })
+  }
 };
 
 exports.updateTour = (req, res) => {
