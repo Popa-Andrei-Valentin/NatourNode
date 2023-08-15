@@ -4,6 +4,13 @@ const handleCastErrorDB = err => {
   const message = `Invalid ${err.path}: ${err.value}`
   return new AppError(message, 400)
 }
+
+handleDuplicateFieldError = err => {
+  console.log("error in function", err)
+  const field = Object.keys(err.keyPattern)[0];
+  const message = `The field '${field}' cannot have the value:'${err.keyValue[field]}', because it is already registered!'`
+  return new AppError(message, 400);
+}
 const sendErrorDev =  (err, res) => {
   res.status(err.statusCode).json({
     status: err.status,
@@ -47,6 +54,9 @@ module.exports = (err, req, res, next) => {
     let error = {...err};
 
     if (err.stack.startsWith('CastError')) error = handleCastErrorDB(error);
+
+    // Handle duplicate attribute/field error..
+    if (err.code) error = handleDuplicateFieldError(error);
 
     sendErrorProduction(error, res);
   }
