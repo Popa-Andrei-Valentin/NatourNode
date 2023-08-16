@@ -6,9 +6,15 @@ const handleCastErrorDB = err => {
 }
 
 handleDuplicateFieldError = err => {
-  console.log("error in function", err)
   const field = Object.keys(err.keyPattern)[0];
   const message = `The field '${field}' cannot have the value:'${err.keyValue[field]}', because it is already registered!'`
+  return new AppError(message, 400);
+}
+
+handleValidationErrorDB = err => {
+  const errors = Object.values(err.errors).map(el => el.message)
+
+  const message = `Invalid input data. ${errors.join(". ")}`
   return new AppError(message, 400);
 }
 const sendErrorDev =  (err, res) => {
@@ -53,10 +59,13 @@ module.exports = (err, req, res, next) => {
   } else if (process.env.NODE_ENV === "production") {
     let error = {...err};
 
-    if (err.stack.startsWith('CastError')) error = handleCastErrorDB(error);
+    if (err.stack.startsWith("CastError")) error = handleCastErrorDB(error);
 
-    // Handle duplicate attribute/field error..
+    // Handle duplicate attribute/field errors..
     if (err.code) error = handleDuplicateFieldError(error);
+
+    // Handle validation errors..
+    if (err.name === "ValidationError") error = handleValidationErrorDB(error)
 
     sendErrorProduction(error, res);
   }
