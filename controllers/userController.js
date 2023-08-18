@@ -21,7 +21,12 @@ exports.getUser = (req, res) => {
   }
 
   const user = users[id];
-
+  if (!user) {
+    res.status(500).json({
+      status:"error",
+      message:"This route is not yet defined"
+    })
+  }
   res.status(200).json({
     status:'success',
     user
