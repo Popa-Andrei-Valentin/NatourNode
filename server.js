@@ -14,3 +14,12 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Running on port: ${port}`);
 })
+
+// Unhandled Rejections ( errors outside Express ) protocol.
+process.on("unhandledRejection", err => {
+  // console.log(err.name, err.message);
+  console.log("Unhandled rejection ! Shutting down....")
+  server.close(() => {
+    process.exit(1);
+  })
+})
