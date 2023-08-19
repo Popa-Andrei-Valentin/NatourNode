@@ -47,3 +47,22 @@ exports.login = catchAsync(async (req, res, next) => {
       token
     })
 })
+
+/** Middleware that ensures user is authenticated **/
+exports.protect = catchAsync(async (req, res, next) => {
+  // 1) Getting JWT token and check if it's there
+  let token;
+  if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
+    token = req.headers.authorization.split(" ")[1];
+  }
+
+  if (!token) return next(new AppError("You are not logged in! Please log in"), 401);
+  // 2) Verify JWT token
+
+  // 3) Check if users still exists.
+
+  // 4) Check if user changed password after the JWT token was issued
+
+
+  next();
+})
