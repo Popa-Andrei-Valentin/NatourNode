@@ -29,6 +29,7 @@ const userSchema = new mongoose.Schema({
     }
   },
   photo: String,
+  passwordChangedAt: Date,
   password: {
     type: String,
     required: [true, "User must have a password !"],
@@ -46,7 +47,7 @@ const userSchema = new mongoose.Schema({
       },
       message: "Passwords do not match."
     }
-  }
+  },
 })
 
 // Password encryption.
@@ -65,6 +66,20 @@ userSchema.pre("save", async function(next) {
 
 userSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
   return await bcrypt.compare(candidatePassword, userPassword);
+}
+
+userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
+  console.log(this);
+  if (this.passwordChangedAt) {
+    const changedTimestamp = parseInt(this.passwordChangedAt.getTime()/1000, 10);
+    console.log(changedTimestamp, JWTTimestamp)
+
+    return JWTTimestamp < changedTimestamp;
+  }
+
+
+  // FALSE means not changed.
+  return false;
 }
 
 const User = mongoose.model("User", userSchema);
