@@ -82,7 +82,22 @@ exports.restrictTo = (...roles) => {
     if(!roles.includes(req.user.role)) {
       return next(new AppError("You do not have permission to perform this action", 403));
     }
-
     next();
   }
 }
+
+exports.forgotPassword = catchAsync(async (req, res, next) => {
+  // 1) Get user based on POSTed email.
+    const user = await User.findOne({ email: req.body.email });
+
+    // If no user was found throw error.
+    if (!user) return next(new AppError("There is no user with email adress.", 404));
+
+  // 2) Generate random reset token.
+    const reset = user.createPasswordResetToken();
+
+    // Ensures that no field validation is called and avoid returning errors to the user.
+    await user.save({ validateBeforeSave: false });
+})
+
+exports.resetPassword = (req, res, next) => {}
