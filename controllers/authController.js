@@ -5,6 +5,7 @@ const User = require("./../models/userModel");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError")
 const sendEmail = require("./../utils/email")
+const crypto = require("crypto");
 
 const signToken = id => {
   return jwt.sign({ id: id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN })
@@ -44,7 +45,7 @@ exports.login = catchAsync(async (req, res, next) => {
     if(!user || !(await user.correctPassword(password, user.password))) {
       return next(new AppError("Incorrect email or password", 401));
     }
-  // 3) If everything ok, send tolen to client.
+  // 3) If everything ok, send token to client.
     const token = signToken(user._id)
     res.status(200).json({
       status: "succes",
@@ -132,4 +133,31 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
 })
 
-exports.resetPassword = (req, res, next) => {}
+exports.resetPassword = catchAsync(async (req, res, next) => {
+  // 1) Get user based on token.
+    const hashedToken = crypto
+      .createHash("sha256")
+      .update(req.params.token)
+      .digest("hex");
+
+    const user = await User.findOne({
+      passwordResetToken: hashedToken,
+      passwordResetExpires: {$gt: Date.now()}
+    });
+  // 2) If token has not expired, and there is an user -> set new password.
+    if (!user) return next(new AppError("Token is invalid or has expired!", 400));
+
+    user.password = req.body.password;
+    user.passwordConfirm = req.body.passwordConfirm;
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+    await user.save();
+  // 3) Update 'changedPasswordAt' property for the user.
+
+  // 4) Log in the user -> send JWT.
+  const token = signToken(user._id)
+  res.status(200).json({
+    status: "succes",
+    token
+  })
+})
