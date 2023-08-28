@@ -3,6 +3,8 @@ const fs = require('fs');
 const morgan = require('morgan');
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
+const mongoSanitize = require("express-mongo-sanitize");
+const xss = require("xss-clean");
 
 const AppError = require("./utils/appError");
 const globalErrorController = require("./controllers/errorController")
@@ -36,6 +38,16 @@ app.use("/api", limiter);
 
 // Body parser, reading data from the body into req.body
 app.use(express.json({ limit: "10kb" }));
+
+/**
+ * Data sanitization against NoSQL query injection. (mongoDB queries)
+ */
+app.use(mongoSanitize());
+
+/**
+ * Data sanitization against XSS. (HTML elements)
+ */
+app.use(xss());
 
 // Serving static files
 app.use(express.static(`${__dirname}/public`));
