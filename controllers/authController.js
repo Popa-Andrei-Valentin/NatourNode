@@ -11,9 +11,20 @@ const signToken = id => {
   return jwt.sign({ id: id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN })
 }
 
-// Create Token and
 const createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id)
+
+  const cookieOptions = {
+    expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 *  60 * 1000),
+    httpOnly: true // cannot be modified by the browser in any way.
+  }
+
+  if (process.env.NODE_ENV === "production") cookieOptions.secure = true // Because develop is not on https, secure property cannot work.
+
+  res.cookie("jwt", token, cookieOptions)
+
+  user.password = undefined;
+
   res.status(200).json({
     status: "succes",
     token,
