@@ -56,6 +56,11 @@ const userSchema = new mongoose.Schema({
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,
+  active: {
+    type: String,
+    default: true,
+    select: false
+  }
 })
 
 // Password encryption.
@@ -71,14 +76,20 @@ userSchema.pre("save", async function(next) {
   this.passwordConfirm = undefined;
   console.log("pass confirm", this.passwordConfirm);
   next()
-})
+});
 
 userSchema.pre("save", function(next) {
   if (!this.isModified("password") || this.isNew) return next();
 
   this.passwordChangedAt = Date.now() - 1000;
   next();
-})
+});
+
+userSchema.pre(/^find/, function(next) {
+  // This points to the current query and filters out all the users that have the active property 'false'.
+  this.find({active: {$ne: false}});
+  next();
+});
 
 userSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
   return await bcrypt.compare(candidatePassword, userPassword);
