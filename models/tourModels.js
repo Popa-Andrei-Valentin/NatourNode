@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 const slugify = require("slugify");
 const validator = require("validator");
+const { ObjectId } = require('mongoose');
+// const User = require("./userModel");
+
 
 const tourSchema = new mongoose.Schema({
   // Schema definition object.
@@ -115,7 +118,13 @@ const tourSchema = new mongoose.Schema({
       description: String,
       day: Number,
     },
-  ]
+  ],
+  guides: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: "User" // This is how references are established between data-sets in mongoose.
+    }
+  ],
 },
 {
   // Schema options object
@@ -129,6 +138,7 @@ tourSchema.virtual("durationWeeks").get(function() {
 })
 
 // DOCUMENT MIDDLEWARE: runs before .save() and .create()
+
 // tourSchema.pre("save", function(next) {
 //   // This middleware is called right before we save the data to the DB.
 //   this.slug = slugify(this.name, {lower: true});
