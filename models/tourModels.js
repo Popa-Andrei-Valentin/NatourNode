@@ -151,11 +151,19 @@ tourSchema.virtual("durationWeeks").get(function() {
 // })
 
 // QUERY MIDDLEWARE
-// tourSchema.pre("find", function(next) {
 tourSchema.pre(/^find/, function(next) {
   this.find({ secretTour: { $ne: true } });
   this.start = Date.now()
   next();
+})
+
+  // Middleware that populates the referenced documents. (in this case the guides)
+tourSchema.pre(/^find/, function (next) {
+  this.populate({
+      path:"guides",
+      select: "-__v -passwordChangedAt"
+    });
+  next()
 })
 
 tourSchema.post(/^find/, function(docs, next) {
