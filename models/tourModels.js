@@ -137,7 +137,7 @@ tourSchema.virtual("durationWeeks").get(function() {
   return this.duration / 7;
 })
 
-// Virtual populate - get a volue from a different model that has a reference to this one (tour)
+// Virtual populate - get a volue from a different model that has a reference to this one (tour).
 tourSchema.virtual("reviews", {
   ref: "Review",
   foreignField: "tour", // The field where tour is mentioned.
