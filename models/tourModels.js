@@ -137,6 +137,13 @@ tourSchema.virtual("durationWeeks").get(function() {
   return this.duration / 7;
 })
 
+// Virtual populate - get a volue from a different model that has a reference to this one (tour)
+tourSchema.virtual("reviews", {
+  ref: "Review",
+  foreignField: "tour", // The field where tour is mentioned.
+  localField: "_id" // The field where the value mentioned in the foreignField is stored here (the local field)
+})
+
 // DOCUMENT MIDDLEWARE: runs before .save() and .create()
 
 // tourSchema.pre("save", function(next) {
