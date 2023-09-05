@@ -2,11 +2,14 @@ const express = require('express')
 
 const tourController = require('./../controllers/tourController');
 const authController = require("./../controllers/authController");
-const reviewController = require("./../controllers/reviewController");
+const reviewRouter = require("./reviewRoutes");
 
 const router = express.Router()
 
 // router.param('id', tourController.validateId);
+
+// Mounting the review router inside tour router
+router.use("/:tourId/reviews", reviewRouter)
 
 router
   .route('/top-5-budget')
@@ -28,12 +31,4 @@ router
     authController.protect,
     authController.restrictTo("admin","lead-guide"),
     tourController.deleteTour);
-
-router
-  .route("/:tourId/reviews")
-  .post(
-    authController.protect,
-    authController.restrictTo("user"),
-    reviewController.createNewReview
-  )
 module.exports = router
