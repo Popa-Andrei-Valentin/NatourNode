@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
+const factory = require("./handlerFactory");
 
 const filterObj = (obj,...allowedFileds) => {
   const newObj = {}
@@ -86,16 +87,6 @@ exports.createUser = (req, res) => {
   })
 }
 
-exports.updateUser = (req, res) => {
-  res.status(500).json({
-    status:'Error',
-    message:'Route still in progress'
-  })
-}
-
-exports.deleteUser = (req, res) => {
-  res.status(500).json({
-    status:'Error',
-    message:'Route still in progress'
-  })
-}
+// Do NOT update passwords with this.
+exports.updateUser = factory.updateOne(User);
+exports.deleteUser = factory.deleteOne(User);
