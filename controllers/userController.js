@@ -58,32 +58,12 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
 })
 
 
-exports.getUser = (req, res) => {
-  const id = Number(req.params.id)
-  if (id > users.length) {
-    res.status(404).json({
-      status:'error',
-      message:`There is no user with the following id: ${id}`
-    });
-  }
-
-  const user = users[id];
-  if (!user) {
-    res.status(500).json({
-      status:"error",
-      message:"This route is not yet defined"
-    })
-  }
-  res.status(200).json({
-    status:'success',
-    user
-  })
-};
+exports.getUser = factory.getOne(User);
 
 exports.createUser = (req, res) => {
   res.status(500).json({
     status:'Error',
-    message:'Route still in progress'
+    message:'Route still in progress. Please use /signUp instead'
   })
 }
 
