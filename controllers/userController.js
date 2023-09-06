@@ -11,18 +11,6 @@ const filterObj = (obj,...allowedFileds) => {
   return newObj;
 }
 
-exports.getAllUsers = catchAsync(async (req, res, next) => {
-  const user = await User.find()
-
-  res.status(200).json({
-    status: 'succes',
-    results: user.length,
-    data: {
-      user
-    }
-  });
-});
-
 /**
  * Update current User information (expect password).
  */
@@ -57,16 +45,15 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   })
 })
 
-
-exports.getUser = factory.getOne(User);
-
 exports.createUser = (req, res) => {
   res.status(500).json({
     status:'Error',
     message:'Route still in progress. Please use /signUp instead'
   })
-}
 
+}
+exports.getAllUsers = factory.getAll(User);
+exports.getUser = factory.getOne(User);
 // Do NOT update passwords with this.
 exports.updateUser = factory.updateOne(User);
 exports.deleteUser = factory.deleteOne(User);
