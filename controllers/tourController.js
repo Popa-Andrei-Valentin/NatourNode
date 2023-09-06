@@ -44,26 +44,7 @@ exports.getSpecificTour = catchAsync(async (req, res, next) => {
     });
 });
 
-exports.createTour = catchAsync(async (req, res, next) => {
-    const newTour = await Tour.create(req.body)
-
-    res.status(201).json({
-      status: 'succes',
-      data: {
-        tour: newTour
-      }
-    })
-  }
-  // try {
-  //
-  // } catch (err) {
-  //   res.status(400).json({
-  //     status: "fail",
-  //     message: err
-  //     })
-  //   }
-  // }
-);
+exports.createTour = factory.createOne(Tour);
 
 exports.updateTour = factory.updateOne(Tour);
 
