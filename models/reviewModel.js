@@ -43,8 +43,6 @@ reviewSchema.pre(/^find/, function(next){
   //   path:"tour",
   //   select:"name"
   // })
-
-
   next();
 })
 
@@ -62,15 +60,34 @@ reviewSchema.statics.calcAverageRating = async function(tour) {
       }
     }
   ]);
-  await Tour.findByIdAndUpdate(tour, {
-    ratingsQuantity: stats[0].nRating,
-    ratingsAverage: stats[0].avgRating
-  })
+
+  if(stats.length > 0) {
+    await Tour.findByIdAndUpdate(tour, {
+      ratingsQuantity: stats[0].nRating,
+      ratingsAverage: stats[0].avgRating
+    })
+  } else {
+    await Tour.findByIdAndUpdate(tour, {
+      ratingsQuantity: 0,
+      ratingsAverage: 4.5
+    })
+  }
 };
 
 reviewSchema.post("save", function() {
   // This points to current review.
   this.constructor.calcAverageRating(this.tour)
+})
+
+// MW that is called before findOneAndUpdate/ findOneAndDelete.
+reviewSchema.pre(/^findOneAnd/, async function(next) {
+  this.r = await this.findOne();
+  console.log("**r", this.r);
+  next()
+})
+reviewSchema.post(/^findOneAnd/, async function() {
+  // this.findOne(); does NOT work here, the query has already executed !
+  await this.r.constructor.calcAverageRating(this.r.tour);
 })
 
 const Review = mongoose.model("Review", reviewSchema);
