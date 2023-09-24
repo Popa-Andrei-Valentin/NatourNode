@@ -1,7 +1,7 @@
-const User = require("../models/userModel");
-const catchAsync = require("../utils/catchAsync");
-const AppError = require("../utils/appError");
-const factory = require("./handlerFactory");
+import User from "../models/userModel.js";
+import catchAsync from "../utils/catchAsync.js";
+import AppError from "../utils/appError.js";
+import factory from "./handlerFactory"
 
 const filterObj = (obj,...allowedFileds) => {
   const newObj = {}
@@ -14,7 +14,7 @@ const filterObj = (obj,...allowedFileds) => {
 /**
  * Update current User information (expect password).
  */
-exports.updateMe = catchAsync(async(req, res, next) => {
+export const updateMe = catchAsync(async(req, res, next) => {
   // Always keep separated the methods that update the password and other user information !
 
   // 1) Create error if user POSTs password data
@@ -36,7 +36,7 @@ exports.updateMe = catchAsync(async(req, res, next) => {
 /**
  * Delete current User.
  */
-exports.deleteMe = catchAsync(async (req, res, next) => {
+export const deleteMe = catchAsync(async (req, res, next) => {
   await User.findByIdAndUpdate(req.user.id, {active: false});
 
   res.status(204).json({
@@ -45,20 +45,20 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   })
 })
 
-exports.getMe = (req, res, next) => {
+export const getMe = (req, res, next) => {
   req.params.id = req.user.id;
   next();
 }
 
-exports.createUser = (req, res) => {
+export const createUser = (req, res) => {
   res.status(500).json({
     status:'Error',
     message:'Route still in progress. Please use /signUp instead'
   })
 
 }
-exports.getAllUsers = factory.getAll(User);
-exports.getUser = factory.getOne(User);
+export const getAllUsers = factory.getAll(User);
+export const getUser = factory.getOne(User);
 // Do NOT update passwords with this.
-exports.updateUser = factory.updateOne(User);
-exports.deleteUser = factory.deleteOne(User);
+export const updateUser = factory.updateOne(User);
+export const deleteUser = factory.deleteOne(User);
