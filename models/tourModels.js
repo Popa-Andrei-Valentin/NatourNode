@@ -1,8 +1,7 @@
-const mongoose = require("mongoose");
-const slugify = require("slugify");
-const validator = require("validator");
-const { ObjectId } = require('mongoose');
-// const User = require("./userModel");
+import * as mongoose from "mongoose";
+import * as slugify from "slugify";
+import * as validator from "validator";
+import { ObjectId } from "mongoose";
 
 
 const tourSchema = new mongoose.Schema({
@@ -198,4 +197,4 @@ tourSchema.post(/^find/, function(docs, next) {
 
 const Tour = mongoose.model("Tour", tourSchema);
 
-module.exports = Tour;
+export default Tour;

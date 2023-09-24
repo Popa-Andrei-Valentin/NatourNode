@@ -1,6 +1,5 @@
-// review / rating / createdAt / ref to tour / ref to user who wrote it.
-const mongoose = require("mongoose");
-const Tour = require("./tourModels");
+import * as mongoose from 'mongoose';
+import Tour from "./tourModels.js";
 
 const reviewSchema = new mongoose.Schema({
   review: {
@@ -95,4 +94,4 @@ reviewSchema.post(/^findOneAnd/, async function() {
 
 const Review = mongoose.model("Review", reviewSchema);
 
-module.exports = Review;
+export default Review;
