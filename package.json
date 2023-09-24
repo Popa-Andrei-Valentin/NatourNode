@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Learning Node, Express and MongoDB",
   "main": "app.js",
-  "type": "module"
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server.js",
