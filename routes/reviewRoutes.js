@@ -1,8 +1,6 @@
-// const express = require("express");
 import * as express from "express";
-
-const reviewController = require("./../controllers/reviewController");
-const authController = require("./../controllers/authController");
+import * as reviewController from "./../controllers/reviewController";
+import * as authController from "./../controllers/authController"
 
 // Merge params permits this router to access params from another routes (outside from its scope).
 const router = express.Router({mergeParams: true});

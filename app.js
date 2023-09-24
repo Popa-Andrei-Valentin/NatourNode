@@ -1,18 +1,3 @@
-// const path = require("path");
-// const express = require('express');
-// const fs = require('fs');
-// const morgan = require('morgan');
-// const rateLimit = require("express-rate-limit");
-// const helmet = require("helmet");
-// const mongoSanitize = require("express-mongo-sanitize");
-// const xss = require("xss-clean");
-// const hpp = require("hpp");
-// const userRouter = require("./routes/userRoutes");
-// const reviewRouter = require("./routes/reviewRoutes");
-// const tourRouter = require("./routes/tourRoutes");
-
-const globalErrorController = require("./controllers/errorController")
-
 import * as path from "path";
 import * as express from "express";
 import * as fs from "fs";
@@ -27,6 +12,7 @@ import AppError from './utils/appError.js';
 import tourRouter from "./routes/tourRoutes.js"
 import userRouter from "./routes/userRoutes"
 import reviewRouter from "./routes/reviewRoutes"
+import * as globalErrorController from "./controllers/errorController.js"
 
 const app = express();
 

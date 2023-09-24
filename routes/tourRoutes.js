@@ -1,9 +1,7 @@
-// const express = require('express')
 import * as express from "express";
-
-const tourController = require('./../controllers/tourController');
-const authController = require("./../controllers/authController");
-const reviewRouter = require("./reviewRoutes");
+import * as tourController from "./../controllers/tourController";
+import * as authController from "./../controllers/authController";
+import reviewRouter from "./reviewRoutes.js"
 
 const router = express.Router()
 
