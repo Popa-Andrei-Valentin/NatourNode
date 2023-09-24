@@ -1,21 +1,20 @@
-const Tour = require("../models/tourModels");
-const catchAsync = require("../utils/catchAsync");
-const factory = require("./handlerFactory");
-// const APIFeatures = require("../utils/apiFeatures");
-const AppError = require("../utils/appError");
+import Tour from "../models/tourModels.js";
+import catchAsync from "../utils/catchAsync.js";
+import * as factory from "./handlerFactory.js";
+import AppError from '../utils/appError.js';
 
-exports.aliasTopTours = (req, res, next) => {
+export const aliasTopTours = (req, res, next) => {
   req.query.limit = '5';
   req.query.sort = 'ratingsAverage,price';
   req.query.fields = 'name,price,ratingsAverage,summary,difficulty';
   next();
 }
 
-exports.getAllTours = factory.getAll(Tour);
-exports.getSpecificTour = factory.getOne(Tour, { path:"reviews" });
-exports.createTour = factory.createOne(Tour);
-exports.updateTour = factory.updateOne(Tour);
-exports.deleteTour = factory.deleteOne(Tour);
+export const getAllTours = factory.getAll(Tour);
+export const getSpecificTour = factory.getOne(Tour, { path:"reviews" });
+export const createTour = factory.createOne(Tour);
+export const updateTour = factory.updateOne(Tour);
+export const deleteTour = factory.deleteOne(Tour);
 
 // exports.deleteTour = catchAsync(async (req, res, next) => {
 //   const tour = await Tour.findByIdAndDelete(req.params.id);
@@ -32,7 +31,7 @@ exports.deleteTour = factory.deleteOne(Tour);
 //   })
 // });
 
-exports.getTourStats =  catchAsync(async (req, res, next) => {
+export const getTourStats =  catchAsync(async (req, res, next) => {
     const stats = await Tour.aggregate([
       {
         $match: { ratingsAverage: { $gte: 4.5 } }
@@ -65,7 +64,7 @@ exports.getTourStats =  catchAsync(async (req, res, next) => {
     })
 })
 
-exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
+export const getMonthlyPlan = catchAsync(async (req, res, next) => {
     const year = Number(req.params.year);
 
     const plan = await Tour.aggregate([
@@ -111,7 +110,7 @@ exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
     })
 })
 
-exports.getToursWithin = catchAsync(async (req, res, next) => {
+export const getToursWithin = catchAsync(async (req, res, next) => {
    const {distance, latlng, unit} = req.params;
    const [lat, lng] = latlng.split(",");
    const radius = unit === "mi" ? distance / 3963.2 : distance / 6378.1;
@@ -137,7 +136,7 @@ exports.getToursWithin = catchAsync(async (req, res, next) => {
    })
 })
 
-exports.getDistances = catchAsync(async (req, res, next) => {
+export const getDistances = catchAsync(async (req, res, next) => {
   const {latlng, unit} = req.params;
   const [lat, lng] = latlng.split(",");
 
