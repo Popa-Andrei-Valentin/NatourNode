@@ -1,11 +1,11 @@
 /** All the functions related to the authentication can be found here... **/
-const { promisify } = require("util")
-const jwt = require("jsonwebtoken")
-const User = require("./../models/userModel");
-const catchAsync = require("./../utils/catchAsync");
-const AppError = require("./../utils/appError")
-const sendEmail = require("./../utils/email")
-const crypto = require("crypto");
+import { promisify } from "util";
+import jwt from "jsonwebtoken";
+import User from "../models/userModel.js";
+import catchAsync from "../utils/catchAsync.js";
+import AppError from "../utils/appError.js";
+import sendEmail from "../utils/email.js";
+import * as crypto from "crypto";
 
 const signToken = id => {
   return jwt.sign({ id: id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN })
@@ -34,7 +34,7 @@ const createSendToken = (user, statusCode, res) => {
   })
 }
 
-exports.signup = catchAsync(async (req, res, next) => {
+export const signup = catchAsync(async (req, res, next) => {
   const newUser = await User.create({
     name: req.body.name,
     email: req.body.email,
@@ -47,7 +47,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   createSendToken(newUser, 201, res);
 })
 
-exports.login = catchAsync(async (req, res, next) => {
+export const login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
   // 1) Check if email and passsword exist.
@@ -66,7 +66,7 @@ exports.login = catchAsync(async (req, res, next) => {
 })
 
 /** Middleware that ensures user is authenticated **/
-exports.protect = catchAsync(async (req, res, next) => {
+export const protect = catchAsync(async (req, res, next) => {
   // 1) Getting JWT token and check if it's there
   let token;
   if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
@@ -91,7 +91,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   next();
 })
 
-exports.restrictTo = (...roles) => {
+export const restrictTo = (...roles) => {
   return (req, res, next) => {
     if(!roles.includes(req.user.role)) {
       return next(new AppError("You do not have permission to perform this action", 403));
@@ -100,7 +100,7 @@ exports.restrictTo = (...roles) => {
   }
 }
 
-exports.forgotPassword = catchAsync(async (req, res, next) => {
+export const forgotPassword = catchAsync(async (req, res, next) => {
   // 1) Get user based on POSTed email.
     const user = await User.findOne({ email: req.body.email });
 
@@ -145,7 +145,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
 })
 
-exports.resetPassword = catchAsync(async (req, res, next) => {
+export const resetPassword = catchAsync(async (req, res, next) => {
   // 1) Get user based on token.
     const hashedToken = crypto
       .createHash("sha256")
@@ -170,7 +170,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   createSendToken(user, 200, res);
 })
 
-exports.updatePassword = catchAsync(async(req, res, next) => {
+export const updatePassword = catchAsync(async(req, res, next) => {
   // 1) Get user.
     const user = await User.findById(req.user.id).select("+password");
 
