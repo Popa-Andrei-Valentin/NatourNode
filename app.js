@@ -1,20 +1,25 @@
 import * as path from "path";
-import * as express from "express";
+import express from "express";
 import * as fs from "fs";
 import * as morgan from "morgan";
 import {rateLimit} from 'express-rate-limit';
 import helmet from 'helmet';
-import * as mongoSanitize from "express-mongo-sanitize";
-import * as xss from "xss-clean";
-import * as hpp from "hpp";
+import mongoSanitize from "express-mongo-sanitize";
+import xss from "xss-clean";
+import hpp from "hpp";
 import { json } from 'express';
 import AppError from './utils/appError.js';
 import tourRouter from "./routes/tourRoutes.js"
-import userRouter from "./routes/userRoutes"
-import reviewRouter from "./routes/reviewRoutes"
-import * as globalErrorController from "./controllers/errorController.js"
+import userRouter from "./routes/userRoutes.js"
+import reviewRouter from "./routes/reviewRoutes.js"
+import globalErrorController from "./controllers/errorController.js"
+import { fileURLToPath } from 'url';
+
 
 const app = express();
+const __filename = fileURLToPath(import.meta.url);
+
+const __dirname = path.dirname(__filename);
 
 
 // PUG Engine setup.

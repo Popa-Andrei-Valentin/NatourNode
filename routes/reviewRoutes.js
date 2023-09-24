@@ -1,6 +1,6 @@
 import * as express from "express";
-import * as reviewController from "./../controllers/reviewController";
-import * as authController from "./../controllers/authController"
+import * as reviewController from "./../controllers/reviewController.js";
+import * as authController from "./../controllers/authController.js"
 
 // Merge params permits this router to access params from another routes (outside from its scope).
 const router = express.Router({mergeParams: true});

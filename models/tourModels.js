@@ -1,10 +1,12 @@
-import * as mongoose from "mongoose";
+// import * as mongoose from "mongoose";
 import * as slugify from "slugify";
 import * as validator from "validator";
-import { ObjectId } from "mongoose";
+import * as mongoose from "mongoose";
+import pkg from 'mongoose';
+const { Schema, model } = pkg;
 
 
-const tourSchema = new mongoose.Schema({
+const tourSchema = new Schema({
   // Schema definition object.
   name: {
     type: String,
@@ -121,7 +123,7 @@ const tourSchema = new mongoose.Schema({
   ],
   guides: [
     {
-      type: mongoose.Schema.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "User" // This is how references are established between data-sets in mongoose.
     }
   ],
@@ -195,6 +197,6 @@ tourSchema.post(/^find/, function(docs, next) {
 //   next();
 // })
 
-const Tour = mongoose.model("Tour", tourSchema);
+const Tour = model("Tour", tourSchema);
 
 export default Tour;

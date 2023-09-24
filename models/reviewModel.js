@@ -1,7 +1,9 @@
-import * as mongoose from 'mongoose';
+// import * as mongoose from 'mongoose';
 import Tour from "./tourModels.js";
+import pkg from 'mongoose';
+const { Schema, model } = pkg;
 
-const reviewSchema = new mongoose.Schema({
+const reviewSchema = new Schema({
   review: {
     type: String,
     required: [true, "If you want to submit a review, there must be one written!"],
@@ -17,12 +19,12 @@ const reviewSchema = new mongoose.Schema({
     select: false, // no to be displayed.
   },
   tour: {
-      type: mongoose.Schema.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Tour",
       required: [true, "Review must belong to a tour."]
     },
   user: {
-      type: mongoose.Schema.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "User",
       required: [true, "Review must belong to an user."]
     }
@@ -92,6 +94,6 @@ reviewSchema.post(/^findOneAnd/, async function() {
   await this.r.constructor.calcAverageRating(this.r.tour);
 })
 
-const Review = mongoose.model("Review", reviewSchema);
+const Review = model("Review", reviewSchema);
 
 export default Review;

@@ -1,11 +1,12 @@
-import * as mongoose from "mongoose";
+// import * as mongoose from "mongoose";
 import * as validator from "validator";
 import * as bcrypt from "bcryptjs";
 import * as crypto from "crypto";
-
+import pkg from 'mongoose';
+const { Schema, model } = pkg;
 
 // name, email, photo, password, passConfirm.
-const userSchema = new mongoose.Schema({
+const userSchema = new Schema({
   name:{
     type: String,
     required: [true, "User must have a name !"],
@@ -122,6 +123,6 @@ userSchema.methods.createPasswordResetToken = function() {
   return resetToken
 }
 
-const User = mongoose.model("User", userSchema);
+const User = model("User", userSchema);
 
 export default User;
