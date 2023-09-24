@@ -1,21 +1,32 @@
-const path = require("path");
-const express = require('express');
-const fs = require('fs');
-const morgan = require('morgan');
-const rateLimit = require("express-rate-limit");
-const helmet = require("helmet");
-const mongoSanitize = require("express-mongo-sanitize");
-const xss = require("xss-clean");
-const hpp = require("hpp");
+// const path = require("path");
+// const express = require('express');
+// const fs = require('fs');
+// const morgan = require('morgan');
+// const rateLimit = require("express-rate-limit");
+// const helmet = require("helmet");
+// const mongoSanitize = require("express-mongo-sanitize");
+// const xss = require("xss-clean");
+// const hpp = require("hpp");
 
 const AppError = require("./utils/appError");
 const globalErrorController = require("./controllers/errorController")
 const tourRouter = require("./routes/tourRoutes");
 const userRouter = require("./routes/userRoutes");
 const reviewRouter = require("./routes/reviewRoutes");
-const { json } = require("express");
+
+import * as path from "path";
+import * as express from "express";
+import * as fs from "fs";
+import * as morgan from "morgan";
+import * as rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
+import * as mongoSanitize from "express-mongo-sanitize";
+import * as xss from "xss-clean";
+import * as hpp from "hpp";
+import { json } from 'express';
 
 const app = express();
+
 
 // PUG Engine setup.
 app.set("view engine", "pug");
@@ -98,4 +109,4 @@ app.all('*', (req, res, next) => {
 
 app.use(globalErrorController)
 
-module.exports = app;
+export default app;
