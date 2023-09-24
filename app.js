@@ -8,7 +8,6 @@
 // const xss = require("xss-clean");
 // const hpp = require("hpp");
 
-const AppError = require("./utils/appError");
 const globalErrorController = require("./controllers/errorController")
 const tourRouter = require("./routes/tourRoutes");
 const userRouter = require("./routes/userRoutes");
@@ -24,6 +23,7 @@ import * as mongoSanitize from "express-mongo-sanitize";
 import * as xss from "xss-clean";
 import * as hpp from "hpp";
 import { json } from 'express';
+import AppError from './utils/appError.js';
 
 const app = express();
 
