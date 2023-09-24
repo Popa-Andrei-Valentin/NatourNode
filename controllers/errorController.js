@@ -1,25 +1,25 @@
-const AppError = require("../utils/appError");
+import AppError from '../utils/appError.js';
 
 const handleCastErrorDB = err => {
   const message = `Invalid ${err.path}: ${err.value}`
   return new AppError(message, 400)
 }
 
-handleDuplicateFieldError = err => {
+const handleDuplicateFieldError = err => {
   const field = Object.keys(err.keyPattern)[0];
   const message = `The field '${field}' cannot have the value:'${err.keyValue[field]}', because it is already registered!'`
   return new AppError(message, 400);
 }
 
-handleValidationErrorDB = err => {
+const handleValidationErrorDB = err => {
   const errors = Object.values(err.errors).map(el => el.message)
 
   const message = `Invalid input data -> ${errors.join(". ")}`
   return new AppError(message, 400);
 }
 
-handleJWTTokenError = () => new AppError("Invalid token. Please login again !", 401);
-handleJWTTokenExpired = () => new AppError("Your token has expired! Please login again.", 401);
+const handleJWTTokenError = () => new AppError("Invalid token. Please login again !", 401);
+const handleJWTTokenExpired = () => new AppError("Your token has expired! Please login again.", 401);
 
 const sendErrorDev =  (err, res) => {
   res.status(err.statusCode).json({
@@ -54,7 +54,7 @@ const sendErrorProduction = (err, res) => {
   })
 }
 
-module.exports = (err, req, res, next) => {
+export default (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || "error";
 
