@@ -18,7 +18,7 @@ import * as path from "path";
 import * as express from "express";
 import * as fs from "fs";
 import * as morgan from "morgan";
-import * as rateLimit from 'express-rate-limit';
+import {rateLimit} from 'express-rate-limit';
 import helmet from 'helmet';
 import * as mongoSanitize from "express-mongo-sanitize";
 import * as xss from "xss-clean";

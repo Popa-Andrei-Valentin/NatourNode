@@ -1,5 +1,6 @@
-const mongoose = require('mongoose')
-const dotenv = require("dotenv")
+import * as mongoose from 'mongoose';
+import * as dotenv from "dotenv";
+import app from './app';
 
 // Uncaught Exception error handling.
 process.on("uncaughtException", err => {
@@ -11,7 +12,7 @@ process.on("uncaughtException", err => {
 
 dotenv.config({path: "./config.env"})
 
-const app = require("./app");
+// const app = require("./app");
 
 mongoose.connect(process.env.DATABASE, {
   useNewUrlParser: true,
