@@ -7,11 +7,11 @@
 // const mongoSanitize = require("express-mongo-sanitize");
 // const xss = require("xss-clean");
 // const hpp = require("hpp");
+// const userRouter = require("./routes/userRoutes");
+// const reviewRouter = require("./routes/reviewRoutes");
+// const tourRouter = require("./routes/tourRoutes");
 
 const globalErrorController = require("./controllers/errorController")
-const tourRouter = require("./routes/tourRoutes");
-const userRouter = require("./routes/userRoutes");
-const reviewRouter = require("./routes/reviewRoutes");
 
 import * as path from "path";
 import * as express from "express";
@@ -24,6 +24,9 @@ import * as xss from "xss-clean";
 import * as hpp from "hpp";
 import { json } from 'express';
 import AppError from './utils/appError.js';
+import tourRouter from "./routes/tourRoutes.js"
+import userRouter from "./routes/userRoutes"
+import reviewRouter from "./routes/reviewRoutes"
 
 const app = express();
 

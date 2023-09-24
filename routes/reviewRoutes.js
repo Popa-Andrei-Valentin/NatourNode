@@ -1,4 +1,5 @@
-const express = require("express");
+// const express = require("express");
+import * as express from "express";
 
 const reviewController = require("./../controllers/reviewController");
 const authController = require("./../controllers/authController");
@@ -27,4 +28,4 @@ router
     authController.restrictTo("user", "admin"),
     reviewController.getReview);
 
-module.exports = router;
+export default router;
