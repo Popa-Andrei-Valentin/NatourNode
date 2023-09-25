@@ -15,15 +15,18 @@ import reviewRouter from "./routes/reviewRoutes.js"
 import globalErrorController from "./controllers/errorController.js"
 import { fileURLToPath } from 'url';
 
+import { renderToString } from "vue/server-renderer";
+import { createApp } from './public/app-vue.js';
 
 const app = express();
-const __filename = fileURLToPath(import.meta.url);
 
+/* When using express js in type "module" you do not have acces to '__dirname'
+ * So this is the soltion to replace it.
+ */
+const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
-// PUG Engine setup.
-app.set("view engine", "pug");
+// Views file setup.
 app.set("views", path.join(__dirname, "./views"));
 
 // Serving static files
@@ -85,12 +88,36 @@ app.use((req,res,next) => {
 });
 
 // 2) ROUTES
-app.get("/", (req, res) => {
-  res.status(200).render("base", {
-    tour: "The Forest Hiker",
-    user: "Andrei"
+
+app.get('/', (req, res) => {
+  const app = createApp();
+
+  renderToString(app).then((html) => {
+    /**
+     * TODO: Fix "refuse to execute inline script" in other way than res.set;
+     */
+    res.set("Content-Security-Policy", "default-src *; style-src 'self' http://* 'unsafe-inline'; script-src 'self' https://* 'unsafe-inline' 'unsafe-eval'")
+    res.send(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Vue SSR Example</title>
+        <script type='importmap'>
+          {
+            "imports": {
+              "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+            }
+          }
+        </script>
+        <script type='module' src='client-vue.js'></script>
+      </head>
+      <body>
+        <div id='app'>${html}</div>
+      </body>
+    </html>
+    `);
   });
-})
+});
 
 app.use("/api/v1/tours", tourRouter);
 app.use("/api/v1/users", userRouter);
