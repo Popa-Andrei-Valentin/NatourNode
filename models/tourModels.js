@@ -157,11 +157,11 @@ tourSchema.virtual("reviews", {
 
 // DOCUMENT MIDDLEWARE: runs before .save() and .create()
 
-// tourSchema.pre("save", function(next) {
-//   // This middleware is called right before we save the data to the DB.
-//   this.slug = slugify(this.name, {lower: true});
-//   next();
-// });
+tourSchema.pre("save", function(next) {
+  // This middleware is called right before we save the data to the DB.
+  this.slug = slugify(this.name, {lower: true});
+  next();
+});
 
 // tourSchema.post("save", function(doc, next) {
 //   console.log(doc);
