@@ -4,6 +4,7 @@ const fs = require('fs');
 const morgan = require('morgan');
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
+const cors = require("cors");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const hpp = require("hpp");
@@ -29,7 +30,8 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // 1) GLOBAL MIDDLEWARE
 // SET Security HTTP headers.
-app.use(helmet())
+app.use(helmet());
+app.use(cors());
 
 // Development logging.
 if (process.env.NODE_ENV === "development") {
