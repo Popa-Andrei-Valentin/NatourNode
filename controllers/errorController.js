@@ -21,37 +21,66 @@ handleValidationErrorDB = err => {
 handleJWTTokenError = () => new AppError("Invalid token. Please login again !", 401);
 handleJWTTokenExpired = () => new AppError("Your token has expired! Please login again.", 401);
 
-const sendErrorDev =  (err, res) => {
-  res.status(err.statusCode).json({
-    status: err.status,
-    error: err,
-    message: err.message,
-    stack: err.stack
-  })
-}
-
-const sendErrorProduction = (err, res) => {
-  /**
-   * Complex error, not to be sent to the user as is.
-   */
-  if (!err.isOperational) {
-    // 1. Log the error.
-    console.error("ERROR:", err);
-
-    // 2.Send generic message.
-    return res.status(500).json({
-      status: "fail",
-      message: "Ups! Something went wrong, try again..."
+const sendErrorDev =  (err, req, res) => {
+  // API
+  if (req.originalUrl.startsWith("/api")) {
+    res.status(err.statusCode).json({
+      status: err.status,
+      error: err,
+      message: err.message,
+      stack: err.stack
+    })
+  } else {
+    // Rendered Website
+    res.status(err.statusCode).render("error", {
+      title: "Something went wrong!",
+      msg: err.message
     })
   }
+}
 
-  /**
-   * Operational error, trusted to be sent to the user as is.
-   */
-  res.status(err.statusCode).json({
-    status: err.status,
-    message: err.message
-  })
+const sendErrorProduction = (err, req, res) => {
+  if (req.originalUrl.startsWith("/api")) {
+    // A) API
+    /**
+     * Complex error, not to be sent to the user as is.
+     */
+    if (!err.isOperational) {
+      // 1. Log the error.
+      console.error("ERROR:", err);
+
+      // 2.Send generic message.
+      return res.status(500).json({
+        status: "fail",
+        message: "Ups! Something went wrong, try again..."
+      })
+    }
+
+    /**
+     * Operational error, trusted to be sent to the user as is.
+     */
+    return res.status(err.statusCode).json({
+      status: err.status,
+      message: err.message
+    })
+  } else {
+    // B) Rendered Website
+    if (!err.isOperational) {
+      // 1. Log the error.
+      console.error("ERROR:", err);
+
+      // 2.Send generic message.
+      return res.status(err.statusCode).render("error", {
+        title: "Something went wrong!",
+        msg: "Please try again later..."
+      })
+    }
+
+    return res.status(err.statusCode).render("error", {
+      title: "Something went wrong!",
+      msg: err.message
+    })
+  }
 }
 
 module.exports = (err, req, res, next) => {
@@ -59,7 +88,7 @@ module.exports = (err, req, res, next) => {
   err.status = err.status || "error";
 
   if (process.env.NODE_ENV === "development") {
-    sendErrorDev(err, res);
+    sendErrorDev(err, req, res);
   } else if (process.env.NODE_ENV === "production") {
     let error = {...err};
 
@@ -74,6 +103,6 @@ module.exports = (err, req, res, next) => {
     // Handle JWT Token errors..
     if (err.name === "JsonWebTokenError") error = handleJWTTokenError();
     if (err.name === "TokenExpiredError") error = handleJWTTokenExpired();
-    sendErrorProduction(error, res);
+    sendErrorProduction(error, req, res);
   }
 }
