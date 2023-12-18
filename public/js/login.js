@@ -11,7 +11,7 @@ export const login = async (email, password) => {
         password
       }
     });
-    console.log(res);
+
     if (res.data.status === "succes") { // TODO: Fix 'succes' status typo.
       showAlert("success","Logged in successfully !")
       window.setTimeout(() => {

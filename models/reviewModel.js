@@ -85,7 +85,6 @@ reviewSchema.post("save", function() {
 // MW that is called before findOneAndUpdate/ findOneAndDelete.
 reviewSchema.pre(/^findOneAnd/, async function(next) {
   this.r = await this.findOne();
-  console.log("**r", this.r);
   next()
 })
 reviewSchema.post(/^findOneAnd/, async function() {

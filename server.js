@@ -3,7 +3,6 @@ const dotenv = require("dotenv")
 
 // Uncaught Exception error handling.
 process.on("uncaughtException", err => {
-  console.log(err.name, err.message);
   mongoose.connection.close(() => {
     process.exit(1);
   })
