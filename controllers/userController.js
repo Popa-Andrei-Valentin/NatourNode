@@ -4,6 +4,7 @@ const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 const factory = require("./handlerFactory");
 const multer = require('multer');
+const path = require('path');
 
 // const multerStorage = multer.diskStorage({
 //   destination: (req, file, cb) =>  {
@@ -30,14 +31,16 @@ const upload = multer({
   fileFilter: multerFilter
 })
 
-const uploadPhoto = multer({ dest: "public/img/users" });
+// const uploadPhoto = multer({ dest: "public/img/users" });
 
-exports.uploadUserPhoto = uploadPhoto.single("photo")
+exports.uploadUserPhoto = upload.single("photo")
 
 exports.resizeUserPhoto = (req, res, next) => {
   if (!req.file) return next();
 
   req.file.fileName = `user-${req.user.id}-${Date.now()}.jpeg`
+
+  console.log("file",req.file.fileName);
 
   sharp(req.file.buffer)
     .resize(500, 500)
