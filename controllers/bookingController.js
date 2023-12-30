@@ -4,6 +4,7 @@ const Bookjng = require("../models/bookingModel");
 const catchAsync = require("../utils/catchAsync");
 const factory = require("./handlerFactory");
 const AppError = require("../utils/appError");
+const Booking = require('../models/bookingModel');
 
 exports.getCheckoutSesssion = catchAsync(async (req, res, next) => {
   // 1) Get the currently booked tour
@@ -44,5 +45,5 @@ exports.createBookingCheckout = catchAsync(async (req, res, next) => {
   if(!tour && !user && !price) return next();
   await Booking.create({tour, user, price})
 
-  res.redirect(req.originalUrl.split("?")[0])
+  res.redirect(req.originalUrl.split('?')[0]);
 })
